@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 
 
 function verifyAccount() {
-  const router = useRouter();
+  const router = useRouter(); 
   const params = useParams<{ username: string }>();
   const form = useForm<z.infer<typeof verifySchema>>({
     resolver: zodResolver(verifySchema),

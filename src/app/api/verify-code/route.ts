@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         { new: true }
       );
       return Response.json(
-        { success: true, message: "Account verified successfully" },
+        { success: true, message: "Account verified successfully. Now you can sign in." },
         { status: 200 },
       );
     } else if (!isCodeNotExpired) {

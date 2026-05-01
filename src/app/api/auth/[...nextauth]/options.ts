@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials?.emailOrUsername || !credentials?.password) {
-          return null;
+          throw new Error("Email/Username and Password are required");
         }
         await dbConnect();
 
@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          return null;
+          throw new Error("No user found with this Email or Username");
         } else {
           try {
             if (!user.isVerified) {
@@ -53,7 +53,7 @@ export const authOptions: NextAuthOptions = {
               );
               if (!emailResult.success) {
                 throw new Error(
-                  "Failed to send verification email. Please try again later.",
+                  "Email not Verified. Failed to send verification email. Please try again later.",
                 );
               }
 
@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
               user.verifycodeExpiry = otpExpiry;
               await user.save();
               throw new Error(
-                "Email not verified. A new verification email has been sent to your email address.",
+                `Email not verified. A new verification email has been sent to your email address. You can login once you verify your email. username:${user.username}`,
               );
             } else {
               const isPasswordValid = await bcrypt.compare(
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
                 user.password,
               );
               if (!isPasswordValid) {
-                return null;
+                throw new Error("Invalid username or password");
               }
               return {
                 id: user._id.toString(),

@@ -24,7 +24,7 @@ export async function GET(request: Request) {
             const usernameErrors = parsedQuery.error.format().username?._errors || [];
             return Response.json({
                     success: false,
-                    message: "Invalid username",
+                    message: "Username can only contain letters, numbers, and underscores, and the length must be between 3 and 20 characters",
                     errors: usernameErrors,
                 },
                 { status: 400 }

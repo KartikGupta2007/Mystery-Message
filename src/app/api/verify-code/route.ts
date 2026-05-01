@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     } else if (!isCodeNotExpired) {
       // Code has expired
       return Response.json(
-        { success: false, message: "Verification code has expired" },
+        { success: false, message: "Verification code has expired. Please try to Sign-in again to get a new code." },
         { status: 400 },
       );
     } else {

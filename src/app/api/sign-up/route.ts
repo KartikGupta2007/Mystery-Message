@@ -9,7 +9,7 @@ export async function POST(request : Request){
     await dbConnect();
 
     try {
-        const { username, email, password } = await request.json();
+        let { username, email, password } = await request.json();
         
         if (!username || !email || !password) {
             return new Response(
@@ -21,6 +21,7 @@ export async function POST(request : Request){
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
+        username = username.toLowerCase();
         
         const existingUserByThisEmail = await UserModel.findOne({
             email,
@@ -54,7 +55,7 @@ export async function POST(request : Request){
             const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); //10mins
 
             const newUser = new UserModel({
-                username,
+                username : username,
                 email,
                 password,
                 verifyCode: otp,

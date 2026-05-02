@@ -44,20 +44,26 @@ function page() {
         emailOrUsername: data.identifier,
         password: data.password
       }); 
-      if(result?.error?.startsWith("Email not verified. A new verification email has been sent to your email address. You can login once you verify your email.")) {
+      if (result?.error) {
+        if (result.error.startsWith("Email not verified. A new verification email has been sent to your email address. You can login once you verify your email.")) {
           toast.error("Sign-in Failed", {
             description: "Email not verified. A new verification email has been sent to your email address. You can login once you verify your email."
           });
           const match = result.error.match(/username:(\w+)/);
           const username = match ? match[1] : null;
-          if(username) router.replace(`/verify/${username}`)
+          if (username) router.replace(`/verify/${username}`)
         } else {
-          toast.success("Sign-in Successful", {
-            description: "You have successfully signed in!"
+          toast.error("Sign-in Failed", {
+            description: result.error
           });
         }
-      
-      if(result?.url) {
+      } else {
+        toast.success("Sign-in Successful", {
+          description: "You have successfully signed in!"
+        });
+      }
+
+      if (result?.url) {
         router.replace('/dashboard');
       }
     } catch (error) {
@@ -92,8 +98,11 @@ function page() {
                   <FormLabel>Username or Email</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your Username or Email"
+                      placeholder="Enter your Username(only lowercase) or Email"
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.toLowerCase());
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,7 +127,7 @@ function page() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait </>) : "Sign Up"}
+              {isSubmitting ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait </>) : "Sign In"}
             </Button>
           </form>
         </Form>

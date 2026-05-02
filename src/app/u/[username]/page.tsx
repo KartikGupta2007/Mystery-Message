@@ -138,6 +138,7 @@ export default function SendMessage() {
                       {...field}
                     />
                   </FormControl>
+                  <FormLabel>Write minimum 10 characters to send message</FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,7 +151,7 @@ export default function SendMessage() {
                   Please wait
                 </Button>
               ) : (
-                <Button type="submit" disabled={isLoading || !messageContent}>
+                <Button type="submit" disabled={isLoading || (messageContent?.length ?? 0) < 10}>
                   Send It
                 </Button>
               )}

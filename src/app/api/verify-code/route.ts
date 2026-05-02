@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     if (isCodeValid && isCodeNotExpired) {
       // Update the user's verification status using findOneAndUpdate to bypass schema hooks
-      await UserModel.findOneAndUpdate(
+      const user = await UserModel.findOneAndUpdate(
         { username: decodedUsername },
         {
           $set: {

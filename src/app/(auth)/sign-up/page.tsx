@@ -101,11 +101,11 @@ function page() {
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your Username Preference"
+                      placeholder="Enter your Username Preference(only lowercase)"
                       {...field}
                       onChange={(e) => {
-                        field.onChange(e);
-                        setUsername(e.target.value);
+                        field.onChange(e.target.value.toLowerCase());
+                        setUsername(e.target.value.toLowerCase());
                       }}
                     />
                   </FormControl>
@@ -145,7 +145,7 @@ function page() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="password"
+                      placeholder="Enter your password(atleast 6 characters)"
                       {...field}
                     />
                   </FormControl>

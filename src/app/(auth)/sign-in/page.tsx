@@ -52,8 +52,8 @@ function page() {
           const username = match ? match[1] : null;
           if(username) router.replace(`/verify/${username}`)
         } else {
-          toast.error("Sign-in Failed", {
-            description: result?.error || "Invalid username or password fk"
+          toast.success("Sign-in Successful", {
+            description: "You have successfully signed in!"
           });
         }
       

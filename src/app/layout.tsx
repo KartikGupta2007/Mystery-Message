@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner"
 import './global.css'
+import Navbar from "@/components/Navbar";
 
 
 const geistSans = Geist({
@@ -32,6 +33,7 @@ export default function RootLayout({
     >
       <AuthProvider>
         <body className="min-h-full flex flex-col">
+          <Navbar />
           {children}
           <Toaster />
         </body>

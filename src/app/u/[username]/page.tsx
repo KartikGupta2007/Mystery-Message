@@ -28,12 +28,12 @@ const parseStringMessages = (messageString: string): string[] => {
   return messageString.split(specialChar).filter(Boolean);
 };
 
-const initialMessageString =
-  "What's your favorite movie?||Do you have any pets?||What's your dream job?";
+const initialMessageString = "What's your favorite movie?||Do you have any pets?||What's your dream job?";
 
 export default function SendMessage() {
   const params = useParams<{ username: string }>();
   const username = params?.username ?? '';
+  const isUsernameValid = Boolean(username);
 
   const [completion, setCompletion] = useState(initialMessageString);
   const [isSuggestLoading, setIsSuggestLoading] = useState(false);
@@ -52,6 +52,11 @@ export default function SendMessage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
+    if (!isUsernameValid) {
+      toast.error('Invalid profile link');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await axios.post<ApiResponse>('/api/send-message', {
@@ -73,6 +78,11 @@ export default function SendMessage() {
   };
 
   const fetchSuggestedMessages = async () => {
+    if (!isUsernameValid) {
+      toast.error('Invalid profile link');
+      return;
+    }
+
     setIsSuggestLoading(true);
     setError(null);
     setCompletion('');

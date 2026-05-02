@@ -4,6 +4,7 @@ import dbConnect from "@/lib/dbConnect";
 import { UserModel } from "@/model/user.model";
 import { User } from 'next-auth';
 
+// GET to fetch the current acceptingMessage status of the user
 export async function POST(request: Request) {
     await dbConnect();
     const session = await getServerSession(authOptions);
@@ -20,7 +21,17 @@ export async function POST(request: Request) {
         )
     }
     const userId = user._id; 
-    const { acceptingMessage } = await request.json();//from request, true or false.
+    const body = await request.json().catch(() => null);
+    const acceptingMessage = body?.acceptingMessage;
+
+    if (typeof acceptingMessage !== 'boolean') {
+        return Response.json(
+            {
+                success: false,
+                message: 'Invalid request payload'
+            },{ status: 400 }
+        )
+    }
 
     try {
         const updatedUser = await UserModel.findByIdAndUpdate(
@@ -54,6 +65,7 @@ export async function POST(request: Request) {
     }
 }
 
+//POST to update the acceptingMessage status of the user.
 export async function GET(request : Request){
     await dbConnect();
     const session = await getServerSession(authOptions);

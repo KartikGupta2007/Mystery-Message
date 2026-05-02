@@ -19,6 +19,7 @@ function page() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [isSwitchLoading, setIsSwitchLoading] = React.useState(false);
+  const [origin, setOrigin] = React.useState('');
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(prevMessages => prevMessages.filter(message => message._id.toString() !== messageId));
@@ -89,7 +90,21 @@ function page() {
     fetchAcceptMessage();
   },[session, setValue, fetchMessages, fetchAcceptMessage])
 
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  const username = session?.user?.username;
+  const profileUrl = username && origin
+    ? new URL(`/u/${username}`, origin).toString()
+    : '';
+
   const copyToClipboard = () => {
+    if (!profileUrl) {
+      toast.error('Profile URL is not available');
+      return;
+    }
+
     navigator.clipboard.writeText(profileUrl)
     .then(() => {
       toast.success("Profile URL copied to clipboard");
@@ -114,10 +129,6 @@ function page() {
     )
   }
 
-  const username = session?.user?.username;
-  const baeUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baeUrl}/u/${username}`;
-
   return (
     <div className="flex justify-center items-start min-h-screen bg-gray-800 py-12">
       <div className="w-full max-w-6xl p-8 space-y-8 bg-white rounded-lg shadow-md">
@@ -128,9 +139,8 @@ function page() {
           <div className="flex items-end gap-2">
             <Textarea
               value={profileUrl}
-              disabled
               readOnly
-              className="resize-none bg-gray-100 text-gray-800 font-mono text-sm flex-1"
+              className="h-10 min-h-0 resize-none overflow-hidden bg-gray-100 text-gray-800 font-mono text-sm flex-1"
               rows={1}
             />
             <Button onClick={copyToClipboard} className="gap-2">

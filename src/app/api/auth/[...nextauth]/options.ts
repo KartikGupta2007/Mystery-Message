@@ -44,12 +44,14 @@ export const authOptions: NextAuthOptions = {
                 100000 + Math.random() * 900000,
               ).toString();
               const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); //10mins
-
+              const baeUrl = `${window.location.protocol}//${window.location.host}`;
+              const profileUrl = `${baeUrl}/verify/${user.username}`;
               // send verification email again with new otp and expiry time
               const emailResult = await sendVerificationEmail(
                 user.email,
                 user.username,
                 otp,
+                profileUrl,
               );
               if (!emailResult.success) {
                 throw new Error(

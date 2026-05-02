@@ -11,14 +11,15 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendVerificationEmail(
   email: string,
   username: string,
-  otp: string
+  otp: string,
+  url: string
 ) {
   try {
     const {data,error} = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: email,
       subject: 'Mystery Message Verification Code',
-      react: VerificationEmail({ username, otp }),
+      react: VerificationEmail({ username, otp, url }),
     });
     if(error){
       console.log(error);

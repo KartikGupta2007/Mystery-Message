@@ -13,9 +13,10 @@ import {
 interface VerificationEmailProps {
   username: string;
   otp: string;
+  url: string;
 }
 
-export default function VerificationEmail({ username, otp }: VerificationEmailProps) {
+export default function VerificationEmail({ username, otp, url }: VerificationEmailProps) {
   return (
     <Html lang="en" dir="ltr">
       <Head>
@@ -52,7 +53,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
         </Row>
         <Row>
           <Button
-            href={`http://localhost:3000/verify`}
+            href={url}
             style={{ color: '#61dafb' }}
           >
             Verify here

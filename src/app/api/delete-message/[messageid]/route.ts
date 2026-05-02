@@ -4,10 +4,13 @@ import dbConnect from '@/lib/dbConnect';
 import { User } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/options';
 import mongoose from 'mongoose';
+import { NextRequest } from 'next/server';
 
-export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
-  // `params` can be a Promise in some Next.js runtimes — resolve it safely
-  const resolvedParams = await Promise.resolve(params as any);
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ messageid: string }> }
+) {
+  const resolvedParams = await params;
   const messageId = resolvedParams?.messageid;
   await dbConnect();
   const session = await getServerSession(authOptions);

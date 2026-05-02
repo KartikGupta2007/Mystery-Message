@@ -1,11 +1,19 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
+import { render } from '@react-email/render';
 import VerificationEmail from '../../Email/VerificationEmail';
 
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined');
+if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
+  throw new Error('Email environment variables are not defined');
 }
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
 
 
 export async function sendVerificationEmail(
@@ -15,18 +23,20 @@ export async function sendVerificationEmail(
   url: string
 ) {
   try {
-    const {data,error} = await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    const html = await render(VerificationEmail({ username, otp, url }));
+
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'Mystery Message Verification Code',
-      react: VerificationEmail({ username, otp, url }),
+      html,
     });
-    if(error){
-      console.log(error);
+
+    if (!info) {
       return {
         success: false,
         statusCode: 500,
-        message: error.message || 'Failed to send verification email in tryif',
+        message: 'Failed to send verification email',
       };
     }
     return {

@@ -28,7 +28,7 @@ export async function sendVerificationEmail(
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Mystery Message Verification Code',
+      subject: `Hi ${username}, Welcome to Mystery Messages! Please verify your email address`,
       html,
     });
 
@@ -54,18 +54,3 @@ export async function sendVerificationEmail(
   }
 
 }
-
-
-// imp:
-// You're seeing this error because you're using the default resend.dev domain to send emails to recipients other than your own email address (k.a.r.t.i.k.2007.17@gmail.com)1. The resend.dev domain is only available for testing purposes and can only send emails to the email address associated with your Resend account.
-
-// To send emails to other recipients, you need to add and verify your own domain in Resend:
-
-// Go to the Domains page in your Resend dashboard
-// Click Add Domain
-// Enter your domain name
-// Follow the verification steps to add the required DNS records
-// Once verified, update your API request to use your verified domain
-// After verifying your domain, change the from address in your API request from onboarding@resend.dev to an email using your verified domain (for example, noreply@yourdomain.com).
-
-// For detailed instructions on verifying your domain, check out the 
